@@ -1,0 +1,16 @@
+{
+  "name": "endorse",
+  "version": "1.0.0",
+  "description": "Javascript module to validate forms",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "validation",
+    "form",
+    "validate"
+  ],
+  "author": "Vinicius Weiss Cobos",
+  "license": "ISC"
+}
