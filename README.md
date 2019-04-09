@@ -31,7 +31,7 @@ endorse.run(form, rules);
 
 ## Available rules
 
-Set of the available rules to pass in the array set
+Set of the available rules to pass in the rules array.
 
 - `'alpha'`: Check if the value is a string containing just alphabetic values
 
