@@ -1,6 +1,112 @@
-import * as messages from './messages';
-
 export default () => {
+  const messages = {
+    TIME_ERROR: 'O valor deve ser no formato hh:mm',
+    NONEMPTY_ERROR: 'A lista deve ter pelo menos um item',
+    POSITIVE_ERROR: 'Valor deve ser maior que zero',
+    NONZERO_ERROR: 'Valor não pode ser igual a zero',
+    NUMERIC_ERROR: 'Deve ser um numero',
+    DATE_ERROR: 'Deve ser uma data válida',
+    REQUIRED_ERROR: 'Campo obrigatório',
+    ALPHA_ERROR: 'Apenas caracteres alfabéticos',
+    ALPHANUMERIC_ERROR: 'Apenas caracteres alfanuméricos'
+  };
+
+  const validators = {
+    /* Test if the received value contain just alphabetic characters
+     */
+    alpha(value) {
+      if (/^[a-záàâãéèêíïóôõöúçñ ]+$/i.test(value)) {
+        return false;
+      }
+
+      return messages.ALPHA_ERROR;
+    },
+
+    /* Test if the received value contain just alphanumeric characters
+     */
+    alphanumeric(value) {
+      if (/^[a-záàâãéèêíïóôõöúçñ \d]+$/i.test(value)) {
+        return false;
+      }
+
+      return messages.ALPHANUMERIC_ERROR;
+    },
+
+    /* Test if the received value isn't an empty string
+     */
+    required(value) {
+      if (String(value).trim() !== '') {
+        return false;
+      }
+
+      return messages.REQUIRED_ERROR;
+    },
+
+    /* Test if the received value is a numeric value
+     */
+    numeric(value) {
+      if (/^\d+$/.test(value)) {
+        return false;
+      }
+
+      return messages.NUMERIC_ERROR;
+    },
+
+    /* Test if the received value is a valid date
+     */
+    date(value) {
+      if (/^\d{4}-\d{2}-\d{2}/.test(value)) {
+        return false;
+      }
+
+      return messages.DATE_ERROR;
+    },
+
+    /* Test if the received value isn't equal to zero
+     */
+    nonzero(value) {
+      if (parseInt(value) !== 0) {
+        return false;
+      }
+
+      return messages.NONZERO_ERROR;
+    },
+
+    /* Test if the received value is greater than zero
+     */
+    positive(value) {
+      if (parseInt(value) > 0) {
+        return false;
+      }
+
+      return messages.POSITIVE_ERROR;
+    },
+
+    /* Test if the received array isn't empty
+     */
+    nonempty(value) {
+      if (!Array.isArray(value)) {
+        throw new Error('Invalid data type. Just array accepted.');
+      }
+
+      if (value.length > 0) {
+        return false;
+      }
+
+      return messages.NONEMPTY_ERROR;
+    },
+
+    /* Test if the received value is a valid time
+     */
+    time(value) {
+      if (/^([0-1]\d|[0-2][0-4]):([0-5]\d)$/.test(value)) {
+        return false;
+      }
+
+      return messages.TIME_ERROR;
+    }
+  };
+
 
   /* Receives an object with values and an object with rules. The rules object must contain fields with the same names
    * of the values object. Each field of the rules object must contain an array of validation rules.
@@ -13,11 +119,11 @@ export default () => {
       const value = obj[attr];
 
       rules.forEach(rule => {
-        if (Validators[rule] === undefined) {
+        if (validators[rule] === undefined) {
           throw new Error('Invalid ' + rule + ' validator');
         }
 
-        let result = Validators[rule](value);
+        let result = validators[rule](value);
 
         if (result && errors[attr] === undefined) {
           errors[attr] = result;
@@ -40,108 +146,28 @@ export default () => {
     };
   };
 
+  const setRule  = ({rule, validator, message}) => {
+    if (typeof rule !== 'string') throw new Error('Invalid argument type: rule have to be a string');
+    if (typeof validator !== 'function') throw new Error('Invalid argument type: validator have to be a function');
+    if (typeof message !== 'string') throw new Error('Invalid argument type: message have to be a string');
+
+    messages[rule.toUpperCase() + '_ERROR'] = message;
+    validators[rule] = (value) => {
+      if (validator(value)) {
+        return false;
+      }
+
+      return messages[rule.toUpperCase() + '_ERROR'];
+    };
+  };
+
   return {
-    run
+    run,
+    setRule
   };
 };
 
 
-
-class Validators {
-  /* Test if the received value contain just alphabetic characters
-   */
-  static alpha(value) {
-    if (/^[a-záàâãéèêíïóôõöúçñ ]+$/i.test(value)) {
-      return false;
-    }
-
-    return messages.ALPHA_ERROR;
-  }
-
-  /* Test if the received value contain just alphanumeric characters
-   */
-  static alphanumeric(value) {
-    if (/^[a-záàâãéèêíïóôõöúçñ \d]+$/i.test(value)) {
-      return false;
-    }
-
-    return messages.ALPHANUMERIC_ERROR;
-  }
-
-  /* Test if the received value isn't an empty string
-   */
-  static required(value) {
-    if (String(value).trim() !== '') {
-      return false;
-    }
-
-    return messages.REQUIRED_ERROR;
-  }
-
-  /* Test if the received value is a numeric value
-   */
-  static numeric(value) {
-    if (/^\d+$/.test(value)) {
-      return false;
-    }
-
-    return messages.NUMERIC_ERROR;
-  }
-
-  /* Test if the received value is a valid date
-   */
-  static date(value) {
-    if (/^\d{4}-\d{2}-\d{2}/.test(value)) {
-      return false;
-    }
-
-    return messages.DATE_ERROR;
-  }
-
-  /* Test if the received value isn't equal to zero
-   */
-  static nonzero(value) {
-    if (parseInt(value) !== 0) {
-      return false;
-    }
-
-    return messages.NONZERO_ERROR;
-  }
-
-  /* Test if the received value is greater than zero
-   */
-  static positive(value) {
-    if (parseInt(value) > 0) {
-      return false;
-    }
-
-    return messages.POSITIVE_ERROR;
-  }
-
-  /* Test if the received array isn't empty
-   */
-  static nonempty(value) {
-    if (!Array.isArray(value)) {
-      throw new Error('Invalid data type. Just array accepted.');
-    }
-
-    if (value.length > 0) {
-      return false;
-    }
-
-    return messages.NONEMPTY_ERROR;
-  }
-
-  /* Test if the received value is a valid time
-   */
-  static time(value) {
-    if (/^([0-1]\d|[0-2][0-4]):([0-5]\d)$/.test(value)) {
-      return false;
-    }
-
-    return messages.TIME_ERROR;
-  }
-}
 
 
 

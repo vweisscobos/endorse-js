@@ -29,6 +29,19 @@ const rules = {
 endorse.run(form, rules);
 ```
 
+To use custom rules, you have to use the setRule function passing a name, a validator function and a message in case
+of failing. The validator function have to return true if the validation succeed and false if it fails.
+
+```javascript
+import endorse from 'endorse-js';
+
+endorse.setRule({
+  rule: 'myname',
+  validator: (value) => { return value === 'Vinicius Weiss Cobos'},
+  message: 'Wrong name!'
+});
+```
+
 ## Available rules
 
 Set of the available rules to pass in the rules array.
