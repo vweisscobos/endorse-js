@@ -1,4 +1,4 @@
-export default () => {
+module.exports = (function() {
   const messages = {
     TIME_ERROR: 'O valor deve ser no formato hh:mm',
     NONEMPTY_ERROR: 'A lista deve ter pelo menos um item',
@@ -113,7 +113,7 @@ export default () => {
    */
   const run = (obj, rules) => {
     const errors = {};
-    let status = false;
+    let status = true;
 
     const testRules = (attr, rules) => {
       const value = obj[attr];
@@ -127,7 +127,7 @@ export default () => {
 
         if (result && errors[attr] === undefined) {
           errors[attr] = result;
-          status = true;
+          status = false;
         }
       });
     };
@@ -165,7 +165,7 @@ export default () => {
     run,
     setRule
   };
-};
+})();
 
 
 

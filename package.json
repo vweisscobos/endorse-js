@@ -4,7 +4,7 @@
   "description": "Javascript module to validate forms",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "keywords": [
     "validation",
@@ -12,5 +12,8 @@
     "validate"
   ],
   "author": "Vinicius Weiss Cobos",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^3.4.0"
+  }
 }
