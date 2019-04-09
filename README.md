@@ -1,6 +1,6 @@
-# Is It Right
+# Endorse js
 
-Is it Right is a module to easily validate forms.
+Endorse js is a module to easily validate forms.
 
 ## Installation
 
