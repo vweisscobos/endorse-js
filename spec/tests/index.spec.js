@@ -205,3 +205,82 @@ describe('Numeric validator', function() {
   });
 
 });
+
+describe('Date validator', function() {
+  let rules = {
+    date: ['date']
+  };
+
+  it('Should accept yyyy-mm-dd format', function() {
+    let form = {
+      date: '2019-10-30'
+    };
+
+    expect(endorse.run(form, rules).status).toBeTruthy();
+  });
+
+  it('Should\'t accept dd-mm-yyyy format', function() {
+    let form = {
+      date: '30-10-2019'
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should\'t accept dd-mm-yy format', function() {
+    let form = {
+      date: '30-10-19'
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should\'t accept month number greater than 12', function() {
+    let form = {
+      date: '2019-13-25'
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should\'t accept day number greater than 31', function() {
+    let form = {
+      date: '2019-10-35'
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should\'t accept day number greater than 30 in april, june, september or november', function() {
+    let form = {
+      date: '2019-11-31'
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should\'t accept day number greater than 29 in february', function() {
+    let form = {
+      date: '2019-02-30'
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should accept day number 29 in february in leap year', function() {
+    let form = {
+      date: '2000-02-29'
+    };
+
+    expect(endorse.run(form, rules).status).toBeTruthy();
+  });
+
+  it('Should\'t accept day number 29 in february except in leap year', function() {
+    let form = {
+      date: '2019-02-29'
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+});
