@@ -124,3 +124,53 @@ describe("Alphanumeric validator", function() {
     expect(endorse.run(form, rules).status).toBeTruthy();
   });
 });
+
+/*
+ * Test required validator results
+ */
+describe("Required validator", function() {
+  let rules = {
+    name: ['required']
+  };
+
+  it('Should\'t accept an empty string', function() {
+    let form = {
+      name: ''
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should accept a string with one character', function() {
+    let form = {
+      name: 'a'
+    };
+
+    expect(endorse.run(form, rules).status).toBeTruthy();
+  });
+
+  it('Should\'t accept null values', function() {
+    let form = {
+      name: null
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should\'t accept undefined', function() {
+    let form = {
+      name: undefined
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should accept number zero', function() {
+    let form = {
+      name: 0
+    };
+
+    expect(endorse.run(form, rules).status).toBeTruthy();
+  });
+
+});
