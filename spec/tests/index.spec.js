@@ -174,3 +174,34 @@ describe("Required validator", function() {
   });
 
 });
+
+describe('Numeric validator', function() {
+  let rules = {
+    age: ['numeric']
+  };
+
+  it('Should accept numeric values', function() {
+    let form = {
+      age: 29
+    };
+
+    expect(endorse.run(form, rules).status).toBeTruthy();
+  });
+
+  it('Should\'t accept alphabetic values', function() {
+    let form = {
+      age: '2a'
+    };
+
+    expect(endorse.run(form, rules).status).toBeFalsy();
+  });
+
+  it('Should accept string if it have exclusively numeric characters', function() {
+    let form = {
+      age: '29'
+    };
+
+    expect(endorse.run(form, rules).status).toBeTruthy();
+  });
+
+});
