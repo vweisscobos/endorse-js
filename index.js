@@ -52,14 +52,24 @@ module.exports = (function() {
       return messages.NUMERIC_ERROR;
     },
 
+    // TODO add validation rules
     /* Test if the received value is a valid date
      */
     date(value) {
-      if (/^\d{4}-\d{2}-\d{2}/.test(value)) {
-        return false;
-      }
+      if (!/^\d{4}-\d{2}-\d{2}/.test(value)) return messages.DATE_ERROR;
 
-      return messages.DATE_ERROR;
+      const  date = value.split('-');
+      const day = parseInt(date[2]);
+      const month = parseInt(date[1]);
+      const year = parseInt(date[0]);
+
+      if (day > 31) return messages.DATE_ERROR;
+      if (month > 12) return messages.DATE_ERROR;
+      if ((month === 4 || month === 6 || month === 9 || month === 11) && day > 30) return messages.DATE_ERROR;
+      if ((month === 2) && day > 29) return messages.DATE_ERROR;
+      if (!((year % 4 === 0 && year % 100 !== 0) || (year % 4 === 0 && year % 400 === 0)) && month === 2 && day > 28) return messages.DATE_ERROR;
+
+      return false;
     },
 
     /* Test if the received value isn't equal to zero
@@ -138,8 +148,6 @@ module.exports = (function() {
       if (rule !== objEntries[index]) {
           throw new Error('Invalid ' + rule + ' attribute');
       }
-
-      console.log(rule);
 
       testRules(rule, rules[rule]);
     });
