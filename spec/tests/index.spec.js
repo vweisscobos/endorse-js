@@ -1,5 +1,16 @@
 const endorse = require('../../index');
 
+describe("Run function suite test", function() {
+
+  it("Should throw an error if form and rules objects are incompatible", function() {
+    let form = { name: 'Vinicius' };
+    let rules = { nome: ['required'] };
+
+    expect(() => { endorse.run(form, rules) }).toThrow(); //  takes a function and calls it itself
+  })
+
+});
+
 /*
  * Test alphabetic validator results
  */
