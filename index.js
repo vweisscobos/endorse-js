@@ -32,10 +32,10 @@ module.exports = (function() {
       return messages.ALPHANUMERIC_ERROR;
     },
 
-    /* Test if the received value isn't an empty string
+    /* Test if the received value isn't an empty string, null or undefined
      */
     required(value) {
-      if (String(value).trim() !== '') {
+      if ((value && String(value).trim() !== '') || Number.isInteger(value)) {
         return false;
       }
 
@@ -113,6 +113,8 @@ module.exports = (function() {
    */
   const run = (obj, rules) => {
     const errors = {};
+    const objEntries = Object.keys(obj).sort();
+    const rulesEntries = Object.keys(rules).sort();
     let status = true;
 
     const testRules = (attr, rules) => {
@@ -132,13 +134,15 @@ module.exports = (function() {
       });
     };
 
-    for (let attr in rules) {
-      if (obj[attr] === undefined) {
-        throw new Error('Invalid ' + attr + ' attribute');
+    rulesEntries.forEach((rule, index) => {
+      if (rule !== objEntries[index]) {
+          throw new Error('Invalid ' + rule + ' attribute');
       }
 
-      testRules(attr, rules[attr]);
-    }
+      console.log(rule);
+
+      testRules(rule, rules[rule]);
+    });
 
     return {
       status,
